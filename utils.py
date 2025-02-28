@@ -1,28 +1,29 @@
-"""
-A collection of utility routines and classes used by the spatial
-backends.
-"""
+from django.core.exceptions import ValidationError
+from django.utils.functional import SimpleLazyObject
+from django.utils.text import format_lazy
 
 
-class SpatialOperator:
+def prefix_validation_error(error, prefix, code, params):
     """
-    Class encapsulating the behavior specific to a GIS operation (used by lookups).
+    Prefix a validation error message while maintaining the existing
+    validation data structure.
     """
-
-    sql_template = None
-
-    def __init__(self, op=None, func=None):
-        self.op = op
-        self.func = func
-
-    @property
-    def default_template(self):
-        if self.func:
-            return "%(func)s(%(lhs)s, %(rhs)s)"
-        else:
-            return "%(lhs)s %(op)s %(rhs)s"
-
-    def as_sql(self, connection, lookup, template_params, sql_params):
-        sql_template = self.sql_template or lookup.sql_template or self.default_template
-        template_params.update({"op": self.op, "func": self.func})
-        return sql_template % template_params, sql_params
+    if error.error_list == [error]:
+        error_params = error.params or {}
+        return ValidationError(
+            # We can't simply concatenate messages since they might require
+            # their associated parameters to be expressed correctly which
+            # is not something `format_lazy` does. For example, proxied
+            # ngettext calls require a count parameter and are converted
+            # to an empty string if they are missing it.
+            message=format_lazy(
+                "{} {}",
+                SimpleLazyObject(lambda: prefix % params),
+                SimpleLazyObject(lambda: error.message % error_params),
+            ),
+            code=code,
+            params={**error_params, **params},
+        )
+    return ValidationError(
+        [prefix_validation_error(e, prefix, code, params) for e in error.error_list]
+    )

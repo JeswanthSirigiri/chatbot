@@ -1,17 +1,14 @@
-import django.contrib.admin.models
-from django.conf import settings
 from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
     dependencies = [
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ("contenttypes", "__first__"),
+        ("sites", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name="LogEntry",
+            name="Redirect",
             fields=[
                 (
                     "id",
@@ -23,53 +20,45 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 (
-                    "action_time",
-                    models.DateTimeField(auto_now=True, verbose_name="action time"),
-                ),
-                (
-                    "object_id",
-                    models.TextField(null=True, verbose_name="object id", blank=True),
-                ),
-                (
-                    "object_repr",
-                    models.CharField(max_length=200, verbose_name="object repr"),
-                ),
-                (
-                    "action_flag",
-                    models.PositiveSmallIntegerField(verbose_name="action flag"),
-                ),
-                (
-                    "change_message",
-                    models.TextField(verbose_name="change message", blank=True),
-                ),
-                (
-                    "content_type",
+                    "site",
                     models.ForeignKey(
-                        on_delete=models.SET_NULL,
-                        blank=True,
-                        null=True,
-                        to="contenttypes.ContentType",
-                        verbose_name="content type",
+                        to="sites.Site",
+                        on_delete=models.CASCADE,
+                        verbose_name="site",
                     ),
                 ),
                 (
-                    "user",
-                    models.ForeignKey(
-                        to=settings.AUTH_USER_MODEL,
-                        on_delete=models.CASCADE,
-                        verbose_name="user",
+                    "old_path",
+                    models.CharField(
+                        help_text=(
+                            "This should be an absolute path, excluding the domain "
+                            "name. Example: “/events/search/”."
+                        ),
+                        max_length=200,
+                        verbose_name="redirect from",
+                        db_index=True,
+                    ),
+                ),
+                (
+                    "new_path",
+                    models.CharField(
+                        help_text=(
+                            "This can be either an absolute path (as above) or a full "
+                            "URL starting with “http://”."
+                        ),
+                        max_length=200,
+                        verbose_name="redirect to",
+                        blank=True,
                     ),
                 ),
             ],
             options={
-                "ordering": ["-action_time"],
-                "db_table": "django_admin_log",
-                "verbose_name": "log entry",
-                "verbose_name_plural": "log entries",
+                "ordering": ["old_path"],
+                "unique_together": {("site", "old_path")},
+                "db_table": "django_redirect",
+                "verbose_name": "redirect",
+                "verbose_name_plural": "redirects",
             },
             bases=(models.Model,),
-            managers=[
-                ("objects", django.contrib.admin.models.LogEntryManager()),
-            ],
         ),
     ]
