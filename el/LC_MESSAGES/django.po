@@ -1,22 +1,19 @@
 # This file is distributed under the same license as the Django package.
 #
 # Translators:
-# Antonis Christofides <antonis@antonischristofides.com>, 2021
 # Dimitris Glezos <glezos@transifex.com>, 2011
-# Giannis Meletakis <meletakis@gmail.com>, 2015
+# Fotis Athineos <fotis@transifex.com>, 2021
 # Jannis Leidel <jannis@leidel.info>, 2011
-# Nick Mavrakis <mavrakis.n@gmail.com>, 2016-2018,2021
 # Nick Mavrakis <mavrakis.n@gmail.com>, 2016
 # Pãnoș <panos.laganakos@gmail.com>, 2014
-# Pãnoș <panos.laganakos@gmail.com>, 2014,2016,2019-2020
-# Yorgos Pagles <y.pagles@gmail.com>, 2011-2012
+# Yorgos Pagles <y.pagles@gmail.com>, 2011
 msgid ""
 msgstr ""
 "Project-Id-Version: django\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-01-15 09:00+0100\n"
-"PO-Revision-Date: 2021-03-30 03:21+0000\n"
-"Last-Translator: Antonis Christofides <antonis@antonischristofides.com>\n"
+"PO-Revision-Date: 2021-08-04 06:47+0000\n"
+"Last-Translator: Fotis Athineos <fotis@transifex.com>\n"
 "Language-Team: Greek (http://www.transifex.com/django/django/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,714 +21,270 @@ msgstr ""
 "Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#, python-format
-msgid "Delete selected %(verbose_name_plural)s"
-msgstr "%(verbose_name_plural)s: Διαγραφή επιλεγμένων"
-
-#, python-format
-msgid "Successfully deleted %(count)d %(items)s."
-msgstr "Επιτυχώς διεγράφησαν %(count)d %(items)s."
-
-#, python-format
-msgid "Cannot delete %(name)s"
-msgstr "Αδύνατη η διαγραφή του %(name)s"
-
-msgid "Are you sure?"
-msgstr "Είστε σίγουρος;"
-
-msgid "Administration"
-msgstr "Διαχείριση"
-
-msgid "All"
-msgstr "Όλα"
-
-msgid "Yes"
-msgstr "Ναι"
-
-msgid "No"
-msgstr "Όχι"
-
-msgid "Unknown"
-msgstr "Άγνωστο"
-
-msgid "Any date"
-msgstr "Οποιαδήποτε ημερομηνία"
-
-msgid "Today"
-msgstr "Σήμερα"
-
-msgid "Past 7 days"
-msgstr "Τελευταίες 7 ημέρες"
-
-msgid "This month"
-msgstr "Αυτό το μήνα"
-
-msgid "This year"
-msgstr "Αυτό το χρόνο"
-
-msgid "No date"
-msgstr "Καθόλου ημερομηνία"
-
-msgid "Has date"
-msgstr "Έχει ημερομηνία"
-
-msgid "Empty"
-msgstr "Χωρίς τιμή"
-
-msgid "Not empty"
-msgstr "Με τιμή"
-
-#, python-format
-msgid ""
-"Please enter the correct %(username)s and password for a staff account. Note "
-"that both fields may be case-sensitive."
-msgstr ""
-"Παρακαλώ δώστε το σωστό %(username)s και συνθηματικό για λογαριασμό "
-"προσωπικού. Και στα δύο πεδία μπορεί να έχει σημασία η διάκριση κεφαλαίων/"
-"μικρών."
-
-msgid "Action:"
-msgstr "Ενέργεια:"
-
-#, python-format
-msgid "Add another %(verbose_name)s"
-msgstr "Να προστεθεί %(verbose_name)s"
-
-msgid "Remove"
-msgstr "Αφαίρεση"
-
-msgid "Addition"
-msgstr "Προσθήκη"
-
-msgid "Change"
-msgstr "Αλλαγή"
-
-msgid "Deletion"
-msgstr "Διαγραφή"
-
-msgid "action time"
-msgstr "ώρα ενέργειας"
-
-msgid "user"
-msgstr "χρήστης"
-
-msgid "content type"
-msgstr "τύπος περιεχομένου"
-
-msgid "object id"
-msgstr "ταυτότητα αντικειμένου"
-
-#. Translators: 'repr' means representation
-#. (https://docs.python.org/library/functions.html#repr)
-msgid "object repr"
-msgstr "αναπαράσταση αντικειμένου"
-
-msgid "action flag"
-msgstr "σημαία ενέργειας"
-
-msgid "change message"
-msgstr "μήνυμα τροποποίησης"
-
-msgid "log entry"
-msgstr "καταχώριση αρχείου καταγραφής"
-
-msgid "log entries"
-msgstr "καταχωρίσεις αρχείου καταγραφής"
-
-#, python-format
-msgid "Added “%(object)s”."
-msgstr "Προστέθηκε «%(object)s»."
-
-#, python-format
-msgid "Changed “%(object)s” — %(changes)s"
-msgstr "Τροποποιήθηκε «%(object)s» — %(changes)s"
-
-#, python-format
-msgid "Deleted “%(object)s.”"
-msgstr "Διαγράφηκε «%(object)s»."
-
-msgid "LogEntry Object"
-msgstr "Αντικείμενο LogEntry"
-
-#, python-brace-format
-msgid "Added {name} “{object}”."
-msgstr "Προστέθηκε {name} “{object}”."
-
-msgid "Added."
-msgstr "Προστέθηκε."
-
-msgid "and"
-msgstr "και"
-
-#, python-brace-format
-msgid "Changed {fields} for {name} “{object}”."
-msgstr "{name} «{object}»: Αλλαγή {fields}."
-
-#, python-brace-format
-msgid "Changed {fields}."
-msgstr "Αλλαγή {fields}."
-
-#, python-brace-format
-msgid "Deleted {name} “{object}”."
-msgstr "Διεγράφη {name} «{object}»."
-
-msgid "No fields changed."
-msgstr "Δεν άλλαξε κανένα πεδίο."
-
-msgid "None"
-msgstr "Κανένα"
-
-msgid "Hold down “Control”, or “Command” on a Mac, to select more than one."
-msgstr ""
-"Κρατήστε πατημένο το «Control» («Command» σε Mac) για να επιλέξετε "
-"περισσότερα από ένα αντικείμενα."
-
-#, python-brace-format
-msgid "The {name} “{obj}” was added successfully."
-msgstr "Προστέθηκε {name} «{obj}»."
-
-msgid "You may edit it again below."
-msgstr "Μπορεί να πραγματοποιηθεί περαιτέρω επεξεργασία παρακάτω."
-
-#, python-brace-format
-msgid ""
-"The {name} “{obj}” was added successfully. You may add another {name} below."
-msgstr ""
-"Προστέθηκε {name} «{obj}». Μπορεί να πραγματοποιηθεί νέα πρόσθεση παρακάτω."
-
-#, python-brace-format
-msgid ""
-"The {name} “{obj}” was changed successfully. You may edit it again below."
-msgstr ""
-"Το αντικείμενο ({name}) «{obj}» τροποποιήθηκε. Μπορεί να πραγματοποιηθεί "
-"περαιτέρω επεξεργασία παρακάτω."
-
-#, python-brace-format
-msgid "The {name} “{obj}” was added successfully. You may edit it again below."
-msgstr ""
-"Προστέθηκε {name} «{obj}». Μπορεί να πραγματοποιηθεί περαιτέρω επεξεργασία "
-"παρακάτω."
-
-#, python-brace-format
-msgid ""
-"The {name} “{obj}” was changed successfully. You may add another {name} "
-"below."
-msgstr ""
-"Το αντικείμενο ({name}) «{obj}» τροποποιήθηκε. Μπορεί να προστεθεί επιπλέον "
-"{name} παρακάτω."
-
-#, python-brace-format
-msgid "The {name} “{obj}” was changed successfully."
-msgstr "Το αντικείμενο ({name}) «{obj}» τροποποιήθηκε."
-
-msgid ""
-"Items must be selected in order to perform actions on them. No items have "
-"been changed."
-msgstr ""
-"Καμία αλλαγή δεν πραγματοποιήθηκε γιατί δεν έχετε επιλέξει αντικείμενο. "
-"Επιλέξτε ένα ή περισσότερα αντικείμενα για να πραγματοποιήσετε ενέργειες σ' "
-"αυτά."
-
-msgid "No action selected."
-msgstr "Δεν έχει επιλεγεί ενέργεια."
-
-#, python-format
-msgid "The %(name)s “%(obj)s” was deleted successfully."
-msgstr "Διεγράφη το αντικείμενο (%(name)s) «%(obj)s»"
-
-#, python-format
-msgid "%(name)s with ID “%(key)s” doesn’t exist. Perhaps it was deleted?"
-msgstr "Δεν υπάρχει %(name)s με ID «%(key)s». Ίσως να έχει διαγραφεί."
-
-#, python-format
-msgid "Add %s"
-msgstr "Να προστεθεί %s"
-
-#, python-format
-msgid "Change %s"
-msgstr "%s: Τροποποίηση"
-
-#, python-format
-msgid "View %s"
-msgstr "%s: Προβολή"
-
-msgid "Database error"
-msgstr "Σφάλμα στη βάση δεδομένων"
-
-#, python-format
-msgid "%(count)s %(name)s was changed successfully."
-msgid_plural "%(count)s %(name)s were changed successfully."
-msgstr[0] "%(count)s %(name)s άλλαξε επιτυχώς."
-msgstr[1] "%(count)s %(name)s άλλαξαν επιτυχώς."
-
-#, python-format
-msgid "%(total_count)s selected"
-msgid_plural "All %(total_count)s selected"
-msgstr[0] "Επιλέχθηκε %(total_count)s"
-msgstr[1] "Επιλέχθηκαν και τα %(total_count)s"
-
-#, python-format
-msgid "0 of %(cnt)s selected"
-msgstr "Επιλέχθηκαν 0 από %(cnt)s"
-
-#, python-format
-msgid "Change history: %s"
-msgstr "Ιστορικό αλλαγών: %s"
-
-#. Translators: Model verbose name and instance representation,
-#. suitable to be an item in a list.
-#, python-format
-msgid "%(class_name)s %(instance)s"
-msgstr "%(class_name)s %(instance)s"
-
-#, python-format
-msgid ""
-"Deleting %(class_name)s %(instance)s would require deleting the following "
-"protected related objects: %(related_objects)s"
-msgstr ""
-"Η διαγραφή του αντικειμένου (%(class_name)s) %(instance)s θα απαιτούσε τη "
-"διαγραφή των παρακάτω προστατευόμενων συσχετισμένων αντικειμένων: "
-"%(related_objects)s"
-
-msgid "Django site admin"
-msgstr "Ιστότοπος διαχείρισης Django"
-
-msgid "Django administration"
-msgstr "Διαχείριση Django"
-
-msgid "Site administration"
-msgstr "Διαχείριση του ιστότοπου"
-
-msgid "Log in"
-msgstr "Σύνδεση"
-
-#, python-format
-msgid "%(app)s administration"
-msgstr "Διαχείριση %(app)s"
-
-msgid "Page not found"
-msgstr "Η σελίδα δεν βρέθηκε"
-
-msgid "We’re sorry, but the requested page could not be found."
-msgstr "Λυπούμαστε, αλλά η σελίδα που ζητήθηκε δεν βρέθηκε."
+msgid "Administrative Documentation"
+msgstr "Διαχειριστική Τεκμηρίωση"
 
 msgid "Home"
 msgstr "Αρχική"
 
-msgid "Server error"
-msgstr "Σφάλμα στο server"
-
-msgid "Server error (500)"
-msgstr "Σφάλμα στο server (500)"
-
-msgid "Server Error <em>(500)</em>"
-msgstr "Σφάλμα στο server <em>(500)</em>"
-
-msgid ""
-"There’s been an error. It’s been reported to the site administrators via "
-"email and should be fixed shortly. Thanks for your patience."
-msgstr ""
-"Παρουσιάστηκε σφάλμα. Εστάλη στους διαχειριστές με email και πιθανότατα θα "
-"διορθωθεί σύντομα. Ευχαριστούμε για την υπομονή σας."
-
-msgid "Run the selected action"
-msgstr "Εκτέλεση της επιλεγμένης ενέργειας"
-
-msgid "Go"
-msgstr "Μετάβαση"
-
-msgid "Click here to select the objects across all pages"
-msgstr "Κάντε κλικ εδώ για να επιλέξετε τα αντικείμενα σε όλες τις σελίδες"
-
-#, python-format
-msgid "Select all %(total_count)s %(module_name)s"
-msgstr "Επιλέξτε και τα %(total_count)s αντικείμενα (%(module_name)s)"
-
-msgid "Clear selection"
-msgstr "Καθαρισμός επιλογής"
-
-#, python-format
-msgid "Models in the %(name)s application"
-msgstr "Μοντέλα στην εφαρμογή %(name)s"
-
-msgid "Add"
-msgstr "Προσθήκη"
-
-msgid "View"
-msgstr "Προβολή"
-
-msgid "You don’t have permission to view or edit anything."
-msgstr "Δεν έχετε δικαίωμα να δείτε ή να επεξεργαστείτε κάτι."
-
-msgid ""
-"First, enter a username and password. Then, you’ll be able to edit more user "
-"options."
-msgstr ""
-"Καταρχήν προσδιορίστε όνομα χρήστη και συνθηματικό. Κατόπιν θα σας δοθεί η "
-"δυνατότητα να εισαγάγετε περισσότερες πληροφορίες για το χρήστη."
-
-msgid "Enter a username and password."
-msgstr "Προσδιορίστε όνομα χρήστη και συνθηματικό."
-
-msgid "Change password"
-msgstr "Αλλαγή συνθηματικού"
-
-msgid "Please correct the error below."
-msgstr "Παρακαλούμε διορθώστε το παρακάτω λάθος."
-
-msgid "Please correct the errors below."
-msgstr "Παρακαλοϋμε διορθώστε τα παρακάτω λάθη."
-
-#, python-format
-msgid "Enter a new password for the user <strong>%(username)s</strong>."
-msgstr ""
-"Προσδιορίστε νέο συνθηματικό για το χρήστη <strong>%(username)s</strong>."
-
-msgid "Welcome,"
-msgstr "Καλώς ήρθατε,"
-
-msgid "View site"
-msgstr "Μετάβαση στην εφαρμογή"
-
 msgid "Documentation"
 msgstr "Τεκμηρίωση"
 
-msgid "Log out"
-msgstr "Αποσύνδεση"
+msgid "Bookmarklets"
+msgstr "Σελιδοδείκτες"
 
-#, python-format
-msgid "Add %(name)s"
-msgstr "%(name)s: προσθήκη"
+msgid "Documentation bookmarklets"
+msgstr "Σελιδοδείκτες τεκμηρίωσης"
 
-msgid "History"
-msgstr "Ιστορικό"
+msgid ""
+"To install bookmarklets, drag the link to your bookmarks toolbar, or right-"
+"click the link and add it to your bookmarks. Now you can select the "
+"bookmarklet from any page in the site."
+msgstr ""
+"Για την εγκατάσταση bookmarklets, σύρετε το link στην γραμμή εργαλείων των "
+"bookmarks του browser σας ή δεξί-κλικ πάνω στο link και προσθέστε το στα "
+"bookmarks. Τώρα μπορείτε να επιλέξετε το bookmarklet μέσα από κάθε σελίδα "
+"του site."
 
-msgid "View on site"
-msgstr "Προβολή στον ιστότοπο"
+msgid "Documentation for this page"
+msgstr "Τεκμηρίωση για αυτήν τη σελίδα"
 
-msgid "Filter"
-msgstr "Φίλτρο"
+msgid ""
+"Jumps you from any page to the documentation for the view that generates "
+"that page."
+msgstr ""
+"Μεταπήδηση από οποιαδήποτε σελίδα στην τεκμηρίωση για το view που "
+"δημιούργησε τη σελίδα αυτή."
 
-msgid "Clear all filters"
-msgstr "Καθαρισμός όλων των φίλτρων"
+msgid "Tags"
+msgstr "Ετικέτες"
 
-msgid "Remove from sorting"
-msgstr "Αφαίρεση από την ταξινόμηση"
+msgid "List of all the template tags and their functions."
+msgstr "Λίστα όλωςν τον ετικετών περιγραμμάτων και των λειτουργιών τους."
 
-#, python-format
-msgid "Sorting priority: %(priority_number)s"
-msgstr "Προτεραιότητα ταξινόμησης: %(priority_number)s"
+msgid "Filters"
+msgstr " Φίλτρα"
 
-msgid "Toggle sorting"
-msgstr "Εναλλαγή ταξινόμησης"
+msgid ""
+"Filters are actions which can be applied to variables in a template to alter "
+"the output."
+msgstr ""
+"Τα φίλτρα είναι ενέργειες που μπορούν να εφαρμοστούν σε μεταβλητές μέσα σε "
+"ένα περίγραμμα για να αλλάξουν το αποτέλεσμα."
 
-msgid "Delete"
-msgstr "Διαγραφή"
+msgid "Models"
+msgstr "Μοντέλα"
+
+msgid ""
+"Models are descriptions of all the objects in the system and their "
+"associated fields. Each model has a list of fields which can be accessed as "
+"template variables"
+msgstr ""
+"Τα μοντέλα είναι περιγραφές όλωςν τον αντικειμένων στο σύστημα και των "
+"συνδεδεμένων πεδίων. Κάθε μοντέλο έχει μια λίστα πεδιών που είναι προσβάσιμα "
+"ως μεταβλητές περιγραμμάτων"
+
+msgid "Views"
+msgstr "Οπτικές"
+
+msgid ""
+"Each page on the public site is generated by a view. The view defines which "
+"template is used to generate the page and which objects are available to "
+"that template."
+msgstr ""
+"Κάθε σελίδα στη δημόσια ιστοσελίδα παράγεται από μια οπτική. Η οπτική ορίζει "
+"ποιό περίγραμμα θα χρησιμοποιηθεί για να παραχθεί η σελίδα και ποιά "
+"αντικείμενα είναι διαθέσιμα σε αυτό το περίγραμμα."
+
+msgid "Tools for your browser to quickly access admin functionality."
+msgstr ""
+"Εργαλεία για το πρόγραμμα περιήγησης για γρήγορη πρόσβαση σε διαχειριστική "
+"λειτουργικότητα. "
+
+msgid "Please install docutils"
+msgstr "Παρακαλώ εγκαταστείστε τα docutils"
 
 #, python-format
 msgid ""
-"Deleting the %(object_name)s '%(escaped_object)s' would result in deleting "
-"related objects, but your account doesn't have permission to delete the "
-"following types of objects:"
+"The admin documentation system requires Python’s <a href=\"%(link)s"
+"\">docutils</a> library."
 msgstr ""
-"Επιλέξατε τη διαγραφή του αντικειμένου '%(escaped_object)s' τύπου "
-"%(object_name)s. Αυτό συνεπάγεται τη διαγραφή συσχετισμένων αντικειμενων για "
-"τα οποία δεν έχετε δικάιωμα διαγραφής. Οι τύποι των αντικειμένων αυτών είναι:"
+"Το σύστημα διαχειριστικής τεκμηρίωσης απαιτεί την βιβλιοθήκη της Python <a "
+"href=\"%(link)s\">docutils</a>."
 
 #, python-format
 msgid ""
-"Deleting the %(object_name)s '%(escaped_object)s' would require deleting the "
-"following protected related objects:"
+"Please ask your administrators to install <a href=\"%(link)s\">docutils</a>."
 msgstr ""
-"Η διαγραφή του αντικειμένου (%(object_name)s) «%(escaped_object)s» απαιτεί "
-"τη διαγραφή των παρακάτω προστατευόμενων αντικειμένων:"
+"Παρακαλώ ζητήστε απο τον διαχειριστή σας να εγκαταστήσει τα <a href="
+"\"%(link)s\">docutils</a>."
+
+#, python-format
+msgid "Model: %(name)s"
+msgstr "Μοντέλο: %(name)s"
+
+msgid "Fields"
+msgstr "Πεδία"
+
+msgid "Field"
+msgstr "Πεδίο"
+
+msgid "Type"
+msgstr "Τύπος"
+
+msgid "Description"
+msgstr "Περιγραφή"
+
+msgid "Methods with arguments"
+msgstr "Μέθοδοι με ορίσματα"
+
+msgid "Method"
+msgstr "Μέθοδος"
+
+msgid "Arguments"
+msgstr "Ορίσματα"
+
+msgid "Back to Model documentation"
+msgstr "Πίσω στην τεκμηρίωση των Μοντέλων"
+
+msgid "Model documentation"
+msgstr "Τεκμηρίωση Μοντέλων"
+
+msgid "Model groups"
+msgstr "Ομάδες μοντέλου"
+
+msgid "Templates"
+msgstr "Περιγράμματα"
+
+#, python-format
+msgid "Template: %(name)s"
+msgstr "Περίγραμμα: %(name)s"
+
+#, python-format
+msgid "Template: <q>%(name)s</q>"
+msgstr "Περίγραμμα: <q>%(name)s</q>"
+
+#. Translators: Search is not a verb here, it qualifies path (a search path)
+#, python-format
+msgid "Search path for template <q>%(name)s</q>:"
+msgstr "Αναζήτηση μονοπατιού για περίγραμμα <q>%(name)s</q>:"
+
+msgid "(does not exist)"
+msgstr "(δεν υπάρχει)"
+
+msgid "Back to Documentation"
+msgstr "Επιστροφή στην Τεκμηρίωση"
+
+msgid "Template filters"
+msgstr "Φίλτρα περιγραμμάτων"
+
+msgid "Template filter documentation"
+msgstr "Τεκμηρίωση φίλτρων περιγραμμάτων"
+
+msgid "Built-in filters"
+msgstr "Ενσωματωμένα φίλτρα"
 
 #, python-format
 msgid ""
-"Are you sure you want to delete the %(object_name)s \"%(escaped_object)s\"? "
-"All of the following related items will be deleted:"
+"To use these filters, put <code>%(code)s</code> in your template before "
+"using the filter."
 msgstr ""
-"Επιβεβαιώστε ότι επιθυμείτε τη διαγραφή των επιλεγμένων αντικειμένων "
-"(%(object_name)s \"%(escaped_object)s\"). Αν προχωρήσετε με τη διαγραφή, όλα "
-"τα παρακάτω συσχετισμένα αντικείμενα θα διαγραφούν επίσης:"
+"Για να χρησιμοποιήσετε αυτά τα φίλτρα, βάλτε <code>%(code)s</code> στο "
+"περίγραμμα σας, προτού χρησιμοποιήσετε το φίλτρο."
 
-msgid "Objects"
-msgstr "Αντικείμενα"
+msgid "Template tags"
+msgstr "Ετικέτες περιγραμμάτων"
 
-msgid "Yes, I’m sure"
-msgstr "Ναι"
+msgid "Template tag documentation"
+msgstr "Τεκμηρίωση ετικετών περιγραμμάτων"
 
-msgid "No, take me back"
-msgstr "Όχι"
-
-msgid "Delete multiple objects"
-msgstr "Διαγραφή πολλαπλών αντικειμένων"
+msgid "Built-in tags"
+msgstr "Ενσωματωμένες ετικέτες"
 
 #, python-format
 msgid ""
-"Deleting the selected %(objects_name)s would result in deleting related "
-"objects, but your account doesn't have permission to delete the following "
-"types of objects:"
+"To use these tags, put <code>%(code)s</code> in your template before using "
+"the tag."
 msgstr ""
-"Η διαγραφή των επιλεγμένων αντικειμένων τύπου «%(objects_name)s» θα είχε "
-"αποτέλεσμα τη διαγραφή των ακόλουθων συσχετισμένων αντικειμένων για τα οποία "
-"δεν έχετε το διακαίωμα διαγραφής:"
+"Για να χρησιμοποιήσετε αυτές τις ετικέτες, βάλτε <code>%(code)s</code> στο "
+"περίγραμμα σας, προτού χρησιμοποιήσετε την ετικέτα."
+
+#, python-format
+msgid "View: %(name)s"
+msgstr "Οπτική: %(name)s"
+
+msgid "Context:"
+msgstr "Πλαίσιο:"
+
+msgid "Templates:"
+msgstr "Περιγράμματα:"
+
+msgid "Back to View documentation"
+msgstr "Πίσω στην τεκμηρίωση του View"
+
+msgid "View documentation"
+msgstr "Προβολή Τεκμηρίωσης"
+
+msgid "Jump to namespace"
+msgstr "Μεταφερθείτε στο namespace"
+
+msgid "Empty namespace"
+msgstr "Άδειο namespace"
+
+#, python-format
+msgid "Views by namespace %(name)s"
+msgstr "Οπτικές ανά namespace %(name)s"
+
+msgid "Views by empty namespace"
+msgstr "Οπτικές ανά κενό namespace"
 
 #, python-format
 msgid ""
-"Deleting the selected %(objects_name)s would require deleting the following "
-"protected related objects:"
+"\n"
+"    View function: <code>%(full_name)s</code>. Name: <code>%(url_name)s</"
+"code>.\n"
 msgstr ""
-"Η διαγραφή των επιλεγμένων αντικειμένων τύπου «%(objects_name)s» απαιτεί τη "
-"διαγραφή των παρακάτω προστατευμένων συσχετισμένων αντικειμένων:"
+"\n"
+"Συνάρτηση οπτικής: <code>%(full_name)s</code>. Όνομα: <code>%(url_name)s</"
+"code>.\n"
+
+msgid "tag:"
+msgstr "ετικέτα:"
+
+msgid "filter:"
+msgstr "φίλτρο:"
+
+msgid "view:"
+msgstr "προβολή:"
 
 #, python-format
-msgid ""
-"Are you sure you want to delete the selected %(objects_name)s? All of the "
-"following objects and their related items will be deleted:"
-msgstr ""
-"Επιβεβαιώστε ότι επιθυμείτε τη διαγραφή των επιλεγμένων αντικειμένων τύπου "
-"«%(objects_name)s». Αν προχωρήσετε με τη διαγραφή, όλα τα παρακάτω "
-"συσχετισμένα αντικείμενα θα διαγραφούν επίσης:"
-
-msgid "Delete?"
-msgstr "Διαγραφή;"
+msgid "App %(app_label)r not found"
+msgstr "Η εφαρμογή %(app_label)r δεν βρέθηκε"
 
 #, python-format
-msgid " By %(filter_title)s "
-msgstr " Ανά %(filter_title)s "
-
-msgid "Summary"
-msgstr "Περίληψη"
-
-msgid "Recent actions"
-msgstr "Πρόσφατες ενέργειες"
-
-msgid "My actions"
-msgstr "Οι ενέργειές μου"
-
-msgid "None available"
-msgstr "Κανένα διαθέσιμο"
-
-msgid "Unknown content"
-msgstr "Άγνωστο περιεχόμενο"
-
-msgid ""
-"Something’s wrong with your database installation. Make sure the appropriate "
-"database tables have been created, and make sure the database is readable by "
-"the appropriate user."
+msgid "Model %(model_name)r not found in app %(app_label)r"
 msgstr ""
-"Υπάρχει κάποιο πρόβλημα στη βάση δεδομένων. Βεβαιωθείτε πως οι κατάλληλοι "
-"πίνακες έχουν δημιουργηθεί και πως υπάρχουν τα κατάλληλα δικαιώματα "
-"πρόσβασης."
+"Το μοντέλο %(model_name)r δεν μπορεί να βρεθεί στην εφαρμογή %(app_label)r"
+
+msgid "model:"
+msgstr "μοντέλο:"
 
 #, python-format
-msgid ""
-"You are authenticated as %(username)s, but are not authorized to access this "
-"page. Would you like to login to a different account?"
-msgstr ""
-"Έχετε ταυτοποιηθεί ως %(username)s, αλλά δεν έχετε δικαίωμα πρόσβασης σ' "
-"αυτή τη σελίδα. Θέλετε να συνδεθείτε με άλλο λογαριασμό;"
-
-msgid "Forgotten your password or username?"
-msgstr "Ξεχάσατε το συνθηματικό ή το όνομα χρήστη σας;"
-
-msgid "Toggle navigation"
-msgstr "Εναλλαγή προβολής πλοήγησης"
-
-msgid "Date/time"
-msgstr "Ημερομηνία/ώρα"
-
-msgid "User"
-msgstr "Χρήστης"
-
-msgid "Action"
-msgstr "Ενέργεια"
-
-msgid ""
-"This object doesn’t have a change history. It probably wasn’t added via this "
-"admin site."
-msgstr ""
-"Αυτό το αντικείμενο δεν έχει ιστορικό αλλαγών. Πιθανότατα δεν προστέθηκε "
-"μέσω του παρόντος διαχειριστικού ιστότοπου."
-
-msgid "Show all"
-msgstr "Εμφάνιση όλων"
-
-msgid "Save"
-msgstr "Αποθήκευση"
-
-msgid "Popup closing…"
-msgstr "Κλείσιμο popup..."
-
-msgid "Search"
-msgstr "Αναζήτηση"
+msgid "the related `%(app_label)s.%(data_type)s` object"
+msgstr "το συσχετισμένο `%(app_label)s.%(data_type)s`  αντικείμενο"
 
 #, python-format
-msgid "%(counter)s result"
-msgid_plural "%(counter)s results"
-msgstr[0] "%(counter)s αποτέλεσμα"
-msgstr[1] "%(counter)s αποτελέσματα"
+msgid "related `%(app_label)s.%(object_name)s` objects"
+msgstr "συσχετισμένα `%(app_label)s.%(object_name)s` αντικείμενα"
 
 #, python-format
-msgid "%(full_result_count)s total"
-msgstr "%(full_result_count)s συνολικά"
-
-msgid "Save as new"
-msgstr "Αποθήκευση ως νέου"
-
-msgid "Save and add another"
-msgstr "Αποθήκευση και προσθήκη καινούργιου"
-
-msgid "Save and continue editing"
-msgstr "Αποθήκευση και συνέχεια επεξεργασίας"
-
-msgid "Save and view"
-msgstr "Αποθήκευση και προβολή"
-
-msgid "Close"
-msgstr "Κλείσιμο"
+msgid "all %s"
+msgstr "όλα %s"
 
 #, python-format
-msgid "Change selected %(model)s"
-msgstr "Να τροποποιηθεί το επιλεγμένο αντικείμενο (%(model)s)"
+msgid "number of %s"
+msgstr "πλήθος number of %s"
 
 #, python-format
-msgid "Add another %(model)s"
-msgstr "Να προστεθεί %(model)s"
-
-#, python-format
-msgid "Delete selected %(model)s"
-msgstr "Να διαγραφεί το επιλεγμένο αντικείμενο (%(model)s)"
-
-msgid "Thanks for spending some quality time with the Web site today."
-msgstr "Ευχαριστούμε που διαθέσατε χρόνο στον ιστότοπο."
-
-msgid "Log in again"
-msgstr "Επανασύνδεση"
-
-msgid "Password change"
-msgstr "Αλλαγή συνθηματικού"
-
-msgid "Your password was changed."
-msgstr "Το συνθηματικό σας αλλάχθηκε."
-
-msgid ""
-"Please enter your old password, for security’s sake, and then enter your new "
-"password twice so we can verify you typed it in correctly."
-msgstr ""
-"Δώστε το παλιό σας συνθηματικό και ακολούθως το νέο σας συνθηματικό δύο "
-"φορές ώστε να ελέγξουμε ότι το πληκτρολογήσατε σωστά."
-
-msgid "Change my password"
-msgstr "Αλλαγή του συνθηματικού μου"
-
-msgid "Password reset"
-msgstr "Επαναφορά συνθηματικού"
-
-msgid "Your password has been set.  You may go ahead and log in now."
-msgstr "Το συνθηματικό σας ορίστηκε. Μπορείτε τώρα να συνδεθείτε."
-
-msgid "Password reset confirmation"
-msgstr "Επιβεβαίωση επαναφοράς συνθηματικού"
-
-msgid ""
-"Please enter your new password twice so we can verify you typed it in "
-"correctly."
-msgstr ""
-"Δώστε το νέο συνθηματικό σας δύο φορές ώστε να ελέγξουμε ότι το "
-"πληκτρολογήσατε σωστά."
-
-msgid "New password:"
-msgstr "Νέο συνθηματικό:"
-
-msgid "Confirm password:"
-msgstr "Επιβεβαίωση συνθηματικού:"
-
-msgid ""
-"The password reset link was invalid, possibly because it has already been "
-"used.  Please request a new password reset."
-msgstr ""
-"Ο σύνδεσμος που χρησιμοποιήσατε για την επαναφορά του συνθηματικού δεν είναι "
-"σωστός, ίσως γιατί έχει ήδη χρησιμοποιηθεί. Πραγματοποιήστε εξαρχής τη "
-"διαδικασία αίτησης επαναφοράς του συνθηματικού."
-
-msgid ""
-"We’ve emailed you instructions for setting your password, if an account "
-"exists with the email you entered. You should receive them shortly."
-msgstr ""
-"Σας στείλαμε email με οδηγίες ορισμού συνθηματικού. Θα πρέπει να το λάβετε "
-"σύντομα."
-
-msgid ""
-"If you don’t receive an email, please make sure you’ve entered the address "
-"you registered with, and check your spam folder."
-msgstr ""
-"Εάν δεν λάβετε email, παρακαλούμε σιγουρευτείτε ότι έχετε εισαγάγει τη "
-"διεύθυνση με την οποία έχετε εγγραφεί, και ελέγξτε το φάκελο ανεπιθύμητης "
-"αλληλογραφίας."
-
-#, python-format
-msgid ""
-"You're receiving this email because you requested a password reset for your "
-"user account at %(site_name)s."
-msgstr ""
-"Λαμβάνετε αυτό το email επειδή ζητήσατε επαναφορά συνθηματικού για το "
-"λογαριασμό σας στον ιστότοπο %(site_name)s."
-
-msgid "Please go to the following page and choose a new password:"
-msgstr ""
-"Παρακαλούμε επισκεφθείτε την ακόλουθη σελίδα και επιλέξτε νέο συνθηματικό: "
-
-msgid "Your username, in case you’ve forgotten:"
-msgstr "Το όνομα χρήστη, σε περίπτωση που δεν το θυμάστε:"
-
-msgid "Thanks for using our site!"
-msgstr "Ευχαριστούμε που χρησιμοποιήσατε τον ιστότοπό μας!"
-
-#, python-format
-msgid "The %(site_name)s team"
-msgstr "Η ομάδα του ιστότοπου %(site_name)s"
-
-msgid ""
-"Forgotten your password? Enter your email address below, and we’ll email "
-"instructions for setting a new one."
-msgstr ""
-"Ξεχάσατε το συνθηματικό σας; Εισαγάγετε το email σας και θα σας στείλουμε "
-"οδηγίες για να ορίσετε καινούργιο."
-
-msgid "Email address:"
-msgstr "Διεύθυνση email:"
-
-msgid "Reset my password"
-msgstr "Επαναφορά του συνθηματικού μου"
-
-msgid "All dates"
-msgstr "Όλες οι ημερομηνίες"
-
-#, python-format
-msgid "Select %s"
-msgstr "Επιλέξτε αντικείμενο (%s)"
-
-#, python-format
-msgid "Select %s to change"
-msgstr "Επιλέξτε αντικείμενο (%s) προς αλλαγή"
-
-#, python-format
-msgid "Select %s to view"
-msgstr "Επιλέξτε αντικείμενο (%s) για προβολή"
-
-msgid "Date:"
-msgstr "Ημ/νία:"
-
-msgid "Time:"
-msgstr "Ώρα:"
-
-msgid "Lookup"
-msgstr "Αναζήτηση"
-
-msgid "Currently:"
-msgstr "Τώρα:"
-
-msgid "Change:"
-msgstr "Επεξεργασία:"
+msgid "%s does not appear to be a urlpattern object"
+msgstr "Το %s δε φαίνεται να είναι ένα αντικείμενο urlpattern"
