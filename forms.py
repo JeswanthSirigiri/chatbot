@@ -1,74 +1,31 @@
-from django import forms
-from django.conf import settings
-from django.contrib.flatpages.models import FlatPage
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.core.exceptions import ValidationError
-from django.utils.translation import gettext
 from django.utils.translation import gettext_lazy as _
 
 
-class FlatpageForm(forms.ModelForm):
-    url = forms.RegexField(
-        label=_("URL"),
-        max_length=100,
-        regex=r"^[-\w/.~]+$",
-        help_text=_(
-            "Example: “/about/contact/”. Make sure to have leading and trailing "
-            "slashes."
+class AdminAuthenticationForm(AuthenticationForm):
+    """
+    A custom authentication form used in the admin app.
+    """
+
+    error_messages = {
+        **AuthenticationForm.error_messages,
+        "invalid_login": _(
+            "Please enter the correct %(username)s and password for a staff "
+            "account. Note that both fields may be case-sensitive."
         ),
-        error_messages={
-            "invalid": _(
-                "This value must contain only letters, numbers, dots, "
-                "underscores, dashes, slashes or tildes."
-            ),
-        },
-    )
+    }
+    required_css_class = "required"
 
-    class Meta:
-        model = FlatPage
-        fields = "__all__"
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if not self._trailing_slash_required():
-            self.fields["url"].help_text = _(
-                "Example: “/about/contact”. Make sure to have a leading slash."
-            )
-
-    def _trailing_slash_required(self):
-        return (
-            settings.APPEND_SLASH
-            and "django.middleware.common.CommonMiddleware" in settings.MIDDLEWARE
-        )
-
-    def clean_url(self):
-        url = self.cleaned_data["url"]
-        if not url.startswith("/"):
+    def confirm_login_allowed(self, user):
+        super().confirm_login_allowed(user)
+        if not user.is_staff:
             raise ValidationError(
-                gettext("URL is missing a leading slash."),
-                code="missing_leading_slash",
+                self.error_messages["invalid_login"],
+                code="invalid_login",
+                params={"username": self.username_field.verbose_name},
             )
-        if self._trailing_slash_required() and not url.endswith("/"):
-            raise ValidationError(
-                gettext("URL is missing a trailing slash."),
-                code="missing_trailing_slash",
-            )
-        return url
 
-    def clean(self):
-        url = self.cleaned_data.get("url")
-        sites = self.cleaned_data.get("sites")
 
-        same_url = FlatPage.objects.filter(url=url)
-        if self.instance.pk:
-            same_url = same_url.exclude(pk=self.instance.pk)
-
-        if sites and same_url.filter(sites__in=sites).exists():
-            for site in sites:
-                if same_url.filter(sites=site).exists():
-                    raise ValidationError(
-                        _("Flatpage with url %(url)s already exists for site %(site)s"),
-                        code="duplicate_url",
-                        params={"url": url, "site": site},
-                    )
-
-        return super().clean()
+class AdminPasswordChangeForm(PasswordChangeForm):
+    required_css_class = "required"
