@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CDP Chatbot</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        #chat-container {
+            max-width: 500px;
+            margin: auto;
+            text-align: left;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            max-height: 400px;
+        }
+        .chat-box {
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 5px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        .user-message {
+            background: #007bff;
+            color: white;
+            text-align: right;
+        }
+        .bot-message {
+            background: #f1f1f1;
+            text-align: left;
+        }
+        #loading {
+            display: none;
+            font-style: italic;
+            color: gray;
+        }
+        #chat-form {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        #question {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>CDP Chatbot</h1>
+
+    <div id="chat-container"></div>
+
+    <form id="chat-form">
+        {% csrf_token %}
+        <input type="text" id="question" placeholder="Ask a question" required>
+        <button type="submit">Send</button>
+    </form>
+
+    <p id="loading">Fetching response...</p>
+
+    <script>
+        $(document).ready(function() {
+            $("#chat-form").submit(function(event) {
+                event.preventDefault();
+                let question = $("#question").val().trim();
+                let chatContainer = $("#chat-container");
+                let loading = $("#loading");
+
+                if (!question) return;
+
+                chatContainer.append(`<div class="chat-box user-message">You: ${question}</div>`);
+                $("#question").val("").focus();
+                chatContainer.scrollTop(chatContainer.prop("scrollHeight"));
+                loading.show();
+
+                $.ajax({
+                    url: "{% url 'chatbot_query_api' %}",
+                    type: "POST",
+                    headers: {
+                        "X-CSRFToken": $("input[name=csrfmiddlewaretoken]").val(),
+                        "Content-Type": "application/json"
+                    },
+                    data: JSON.stringify({ question: question }),
+                    success: function(response) {
+                        loading.hide();
+                        chatContainer.append(`<div class="chat-box bot-message"><strong>Chatbot:</strong> ${response.response}</div>`);
+                        chatContainer.scrollTop(chatContainer.prop("scrollHeight"));
+                    },
+                    error: function(xhr) {
+                        loading.hide();
+                        chatContainer.append(`<div class="chat-box bot-message">Error: Unable to fetch response.</div>`);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+
+
