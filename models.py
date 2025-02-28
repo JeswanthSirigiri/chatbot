@@ -1,360 +1,246 @@
-from __future__ import annotations
+import json
+import warnings
 
-from encodings.aliases import aliases
-from hashlib import sha256
-from json import dumps
-from re import sub
-from typing import Any, Iterator, List, Tuple
+from django.conf import settings
+from django.contrib.admin.utils import quote
+from django.contrib.contenttypes.models import ContentType
+from django.db import models
+from django.urls import NoReverseMatch, reverse
+from django.utils import timezone
+from django.utils.deprecation import RemovedInDjango60Warning
+from django.utils.text import get_text_list
+from django.utils.translation import gettext
+from django.utils.translation import gettext_lazy as _
 
-from .constant import RE_POSSIBLE_ENCODING_INDICATION, TOO_BIG_SEQUENCE
-from .utils import iana_name, is_multi_byte_encoding, unicode_range
+ADDITION = 1
+CHANGE = 2
+DELETION = 3
+
+ACTION_FLAG_CHOICES = [
+    (ADDITION, _("Addition")),
+    (CHANGE, _("Change")),
+    (DELETION, _("Deletion")),
+]
 
 
-class CharsetMatch:
-    def __init__(
+class LogEntryManager(models.Manager):
+    use_in_migrations = True
+
+    def log_action(
         self,
-        payload: bytes,
-        guessed_encoding: str,
-        mean_mess_ratio: float,
-        has_sig_or_bom: bool,
-        languages: CoherenceMatches,
-        decoded_payload: str | None = None,
-        preemptive_declaration: str | None = None,
+        user_id,
+        content_type_id,
+        object_id,
+        object_repr,
+        action_flag,
+        change_message="",
     ):
-        self._payload: bytes = payload
+        warnings.warn(
+            "LogEntryManager.log_action() is deprecated. Use log_actions() instead.",
+            RemovedInDjango60Warning,
+            stacklevel=2,
+        )
+        if isinstance(change_message, list):
+            change_message = json.dumps(change_message)
+        return self.model.objects.create(
+            user_id=user_id,
+            content_type_id=content_type_id,
+            object_id=str(object_id),
+            object_repr=object_repr[:200],
+            action_flag=action_flag,
+            change_message=change_message,
+        )
 
-        self._encoding: str = guessed_encoding
-        self._mean_mess_ratio: float = mean_mess_ratio
-        self._languages: CoherenceMatches = languages
-        self._has_sig_or_bom: bool = has_sig_or_bom
-        self._unicode_ranges: list[str] | None = None
-
-        self._leaves: list[CharsetMatch] = []
-        self._mean_coherence_ratio: float = 0.0
-
-        self._output_payload: bytes | None = None
-        self._output_encoding: str | None = None
-
-        self._string: str | None = decoded_payload
-
-        self._preemptive_declaration: str | None = preemptive_declaration
-
-    def __eq__(self, other: object) -> bool:
-        if not isinstance(other, CharsetMatch):
-            if isinstance(other, str):
-                return iana_name(other) == self.encoding
-            return False
-        return self.encoding == other.encoding and self.fingerprint == other.fingerprint
-
-    def __lt__(self, other: object) -> bool:
-        """
-        Implemented to make sorted available upon CharsetMatches items.
-        """
-        if not isinstance(other, CharsetMatch):
-            raise ValueError
-
-        chaos_difference: float = abs(self.chaos - other.chaos)
-        coherence_difference: float = abs(self.coherence - other.coherence)
-
-        # Below 1% difference --> Use Coherence
-        if chaos_difference < 0.01 and coherence_difference > 0.02:
-            return self.coherence > other.coherence
-        elif chaos_difference < 0.01 and coherence_difference <= 0.02:
-            # When having a difficult decision, use the result that decoded as many multi-byte as possible.
-            # preserve RAM usage!
-            if len(self._payload) >= TOO_BIG_SEQUENCE:
-                return self.chaos < other.chaos
-            return self.multi_byte_usage > other.multi_byte_usage
-
-        return self.chaos < other.chaos
-
-    @property
-    def multi_byte_usage(self) -> float:
-        return 1.0 - (len(str(self)) / len(self.raw))
-
-    def __str__(self) -> str:
-        # Lazy Str Loading
-        if self._string is None:
-            self._string = str(self._payload, self._encoding, "strict")
-        return self._string
-
-    def __repr__(self) -> str:
-        return f"<CharsetMatch '{self.encoding}' bytes({self.fingerprint})>"
-
-    def add_submatch(self, other: CharsetMatch) -> None:
-        if not isinstance(other, CharsetMatch) or other == self:
-            raise ValueError(
-                "Unable to add instance <{}> as a submatch of a CharsetMatch".format(
-                    other.__class__
-                )
-            )
-
-        other._string = None  # Unload RAM usage; dirty trick.
-        self._leaves.append(other)
-
-    @property
-    def encoding(self) -> str:
-        return self._encoding
-
-    @property
-    def encoding_aliases(self) -> list[str]:
-        """
-        Encoding name are known by many name, using this could help when searching for IBM855 when it's listed as CP855.
-        """
-        also_known_as: list[str] = []
-        for u, p in aliases.items():
-            if self.encoding == u:
-                also_known_as.append(p)
-            elif self.encoding == p:
-                also_known_as.append(u)
-        return also_known_as
-
-    @property
-    def bom(self) -> bool:
-        return self._has_sig_or_bom
-
-    @property
-    def byte_order_mark(self) -> bool:
-        return self._has_sig_or_bom
-
-    @property
-    def languages(self) -> list[str]:
-        """
-        Return the complete list of possible languages found in decoded sequence.
-        Usually not really useful. Returned list may be empty even if 'language' property return something != 'Unknown'.
-        """
-        return [e[0] for e in self._languages]
-
-    @property
-    def language(self) -> str:
-        """
-        Most probable language found in decoded sequence. If none were detected or inferred, the property will return
-        "Unknown".
-        """
-        if not self._languages:
-            # Trying to infer the language based on the given encoding
-            # Its either English or we should not pronounce ourselves in certain cases.
-            if "ascii" in self.could_be_from_charset:
-                return "English"
-
-            # doing it there to avoid circular import
-            from charset_normalizer.cd import encoding_languages, mb_encoding_languages
-
-            languages = (
-                mb_encoding_languages(self.encoding)
-                if is_multi_byte_encoding(self.encoding)
-                else encoding_languages(self.encoding)
-            )
-
-            if len(languages) == 0 or "Latin Based" in languages:
-                return "Unknown"
-
-            return languages[0]
-
-        return self._languages[0][0]
-
-    @property
-    def chaos(self) -> float:
-        return self._mean_mess_ratio
-
-    @property
-    def coherence(self) -> float:
-        if not self._languages:
-            return 0.0
-        return self._languages[0][1]
-
-    @property
-    def percent_chaos(self) -> float:
-        return round(self.chaos * 100, ndigits=3)
-
-    @property
-    def percent_coherence(self) -> float:
-        return round(self.coherence * 100, ndigits=3)
-
-    @property
-    def raw(self) -> bytes:
-        """
-        Original untouched bytes.
-        """
-        return self._payload
-
-    @property
-    def submatch(self) -> list[CharsetMatch]:
-        return self._leaves
-
-    @property
-    def has_submatch(self) -> bool:
-        return len(self._leaves) > 0
-
-    @property
-    def alphabets(self) -> list[str]:
-        if self._unicode_ranges is not None:
-            return self._unicode_ranges
-        # list detected ranges
-        detected_ranges: list[str | None] = [unicode_range(char) for char in str(self)]
-        # filter and sort
-        self._unicode_ranges = sorted(list({r for r in detected_ranges if r}))
-        return self._unicode_ranges
-
-    @property
-    def could_be_from_charset(self) -> list[str]:
-        """
-        The complete list of encoding that output the exact SAME str result and therefore could be the originating
-        encoding.
-        This list does include the encoding available in property 'encoding'.
-        """
-        return [self._encoding] + [m.encoding for m in self._leaves]
-
-    def output(self, encoding: str = "utf_8") -> bytes:
-        """
-        Method to get re-encoded bytes payload using given target encoding. Default to UTF-8.
-        Any errors will be simply ignored by the encoder NOT replaced.
-        """
-        if self._output_encoding is None or self._output_encoding != encoding:
-            self._output_encoding = encoding
-            decoded_string = str(self)
-            if (
-                self._preemptive_declaration is not None
-                and self._preemptive_declaration.lower()
-                not in ["utf-8", "utf8", "utf_8"]
-            ):
-                patched_header = sub(
-                    RE_POSSIBLE_ENCODING_INDICATION,
-                    lambda m: m.string[m.span()[0] : m.span()[1]].replace(
-                        m.groups()[0],
-                        iana_name(self._output_encoding).replace("_", "-"),  # type: ignore[arg-type]
-                    ),
-                    decoded_string[:8192],
-                    count=1,
-                )
-
-                decoded_string = patched_header + decoded_string[8192:]
-
-            self._output_payload = decoded_string.encode(encoding, "replace")
-
-        return self._output_payload  # type: ignore
-
-    @property
-    def fingerprint(self) -> str:
-        """
-        Retrieve the unique SHA256 computed using the transformed (re-encoded) payload. Not the original one.
-        """
-        return sha256(self.output()).hexdigest()
-
-
-class CharsetMatches:
-    """
-    Container with every CharsetMatch items ordered by default from most probable to the less one.
-    Act like a list(iterable) but does not implements all related methods.
-    """
-
-    def __init__(self, results: list[CharsetMatch] | None = None):
-        self._results: list[CharsetMatch] = sorted(results) if results else []
-
-    def __iter__(self) -> Iterator[CharsetMatch]:
-        yield from self._results
-
-    def __getitem__(self, item: int | str) -> CharsetMatch:
-        """
-        Retrieve a single item either by its position or encoding name (alias may be used here).
-        Raise KeyError upon invalid index or encoding not present in results.
-        """
-        if isinstance(item, int):
-            return self._results[item]
-        if isinstance(item, str):
-            item = iana_name(item, False)
-            for result in self._results:
-                if item in result.could_be_from_charset:
-                    return result
-        raise KeyError
-
-    def __len__(self) -> int:
-        return len(self._results)
-
-    def __bool__(self) -> bool:
-        return len(self._results) > 0
-
-    def append(self, item: CharsetMatch) -> None:
-        """
-        Insert a single match. Will be inserted accordingly to preserve sort.
-        Can be inserted as a submatch.
-        """
-        if not isinstance(item, CharsetMatch):
-            raise ValueError(
-                "Cannot append instance '{}' to CharsetMatches".format(
-                    str(item.__class__)
-                )
-            )
-        # We should disable the submatch factoring when the input file is too heavy (conserve RAM usage)
-        if len(item.raw) < TOO_BIG_SEQUENCE:
-            for match in self._results:
-                if match.fingerprint == item.fingerprint and match.chaos == item.chaos:
-                    match.add_submatch(item)
-                    return
-        self._results.append(item)
-        self._results = sorted(self._results)
-
-    def best(self) -> CharsetMatch | None:
-        """
-        Simply return the first match. Strict equivalent to matches[0].
-        """
-        if not self._results:
-            return None
-        return self._results[0]
-
-    def first(self) -> CharsetMatch | None:
-        """
-        Redundant method, call the method best(). Kept for BC reasons.
-        """
-        return self.best()
-
-
-CoherenceMatch = Tuple[str, float]
-CoherenceMatches = List[CoherenceMatch]
-
-
-class CliDetectionResult:
-    def __init__(
-        self,
-        path: str,
-        encoding: str | None,
-        encoding_aliases: list[str],
-        alternative_encodings: list[str],
-        language: str,
-        alphabets: list[str],
-        has_sig_or_bom: bool,
-        chaos: float,
-        coherence: float,
-        unicode_path: str | None,
-        is_preferred: bool,
+    def log_actions(
+        self, user_id, queryset, action_flag, change_message="", *, single_object=False
     ):
-        self.path: str = path
-        self.unicode_path: str | None = unicode_path
-        self.encoding: str | None = encoding
-        self.encoding_aliases: list[str] = encoding_aliases
-        self.alternative_encodings: list[str] = alternative_encodings
-        self.language: str = language
-        self.alphabets: list[str] = alphabets
-        self.has_sig_or_bom: bool = has_sig_or_bom
-        self.chaos: float = chaos
-        self.coherence: float = coherence
-        self.is_preferred: bool = is_preferred
+        # RemovedInDjango60Warning.
+        if type(self).log_action != LogEntryManager.log_action:
+            warnings.warn(
+                "The usage of log_action() is deprecated. Implement log_actions() "
+                "instead.",
+                RemovedInDjango60Warning,
+                stacklevel=2,
+            )
+            return [
+                self.log_action(
+                    user_id=user_id,
+                    content_type_id=ContentType.objects.get_for_model(
+                        obj, for_concrete_model=False
+                    ).id,
+                    object_id=obj.pk,
+                    object_repr=str(obj),
+                    action_flag=action_flag,
+                    change_message=change_message,
+                )
+                for obj in queryset
+            ]
 
-    @property
-    def __dict__(self) -> dict[str, Any]:  # type: ignore
-        return {
-            "path": self.path,
-            "encoding": self.encoding,
-            "encoding_aliases": self.encoding_aliases,
-            "alternative_encodings": self.alternative_encodings,
-            "language": self.language,
-            "alphabets": self.alphabets,
-            "has_sig_or_bom": self.has_sig_or_bom,
-            "chaos": self.chaos,
-            "coherence": self.coherence,
-            "unicode_path": self.unicode_path,
-            "is_preferred": self.is_preferred,
-        }
+        if isinstance(change_message, list):
+            change_message = json.dumps(change_message)
 
-    def to_json(self) -> str:
-        return dumps(self.__dict__, ensure_ascii=True, indent=4)
+        log_entry_list = [
+            self.model(
+                user_id=user_id,
+                content_type_id=ContentType.objects.get_for_model(
+                    obj, for_concrete_model=False
+                ).id,
+                object_id=obj.pk,
+                object_repr=str(obj)[:200],
+                action_flag=action_flag,
+                change_message=change_message,
+            )
+            for obj in queryset
+        ]
+
+        if single_object and log_entry_list:
+            instance = log_entry_list[0]
+            instance.save()
+            return instance
+
+        return self.model.objects.bulk_create(log_entry_list)
+
+
+class LogEntry(models.Model):
+    action_time = models.DateTimeField(
+        _("action time"),
+        default=timezone.now,
+        editable=False,
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        models.CASCADE,
+        verbose_name=_("user"),
+    )
+    content_type = models.ForeignKey(
+        ContentType,
+        models.SET_NULL,
+        verbose_name=_("content type"),
+        blank=True,
+        null=True,
+    )
+    object_id = models.TextField(_("object id"), blank=True, null=True)
+    # Translators: 'repr' means representation
+    # (https://docs.python.org/library/functions.html#repr)
+    object_repr = models.CharField(_("object repr"), max_length=200)
+    action_flag = models.PositiveSmallIntegerField(
+        _("action flag"), choices=ACTION_FLAG_CHOICES
+    )
+    # change_message is either a string or a JSON structure
+    change_message = models.TextField(_("change message"), blank=True)
+
+    objects = LogEntryManager()
+
+    class Meta:
+        verbose_name = _("log entry")
+        verbose_name_plural = _("log entries")
+        db_table = "django_admin_log"
+        ordering = ["-action_time"]
+
+    def __repr__(self):
+        return str(self.action_time)
+
+    def __str__(self):
+        if self.is_addition():
+            return gettext("Added “%(object)s”.") % {"object": self.object_repr}
+        elif self.is_change():
+            return gettext("Changed “%(object)s” — %(changes)s") % {
+                "object": self.object_repr,
+                "changes": self.get_change_message(),
+            }
+        elif self.is_deletion():
+            return gettext("Deleted “%(object)s.”") % {"object": self.object_repr}
+
+        return gettext("LogEntry Object")
+
+    def is_addition(self):
+        return self.action_flag == ADDITION
+
+    def is_change(self):
+        return self.action_flag == CHANGE
+
+    def is_deletion(self):
+        return self.action_flag == DELETION
+
+    def get_change_message(self):
+        """
+        If self.change_message is a JSON structure, interpret it as a change
+        string, properly translated.
+        """
+        if self.change_message and self.change_message[0] == "[":
+            try:
+                change_message = json.loads(self.change_message)
+            except json.JSONDecodeError:
+                return self.change_message
+            messages = []
+            for sub_message in change_message:
+                if "added" in sub_message:
+                    if sub_message["added"]:
+                        sub_message["added"]["name"] = gettext(
+                            sub_message["added"]["name"]
+                        )
+                        messages.append(
+                            gettext("Added {name} “{object}”.").format(
+                                **sub_message["added"]
+                            )
+                        )
+                    else:
+                        messages.append(gettext("Added."))
+
+                elif "changed" in sub_message:
+                    sub_message["changed"]["fields"] = get_text_list(
+                        [
+                            gettext(field_name)
+                            for field_name in sub_message["changed"]["fields"]
+                        ],
+                        gettext("and"),
+                    )
+                    if "name" in sub_message["changed"]:
+                        sub_message["changed"]["name"] = gettext(
+                            sub_message["changed"]["name"]
+                        )
+                        messages.append(
+                            gettext("Changed {fields} for {name} “{object}”.").format(
+                                **sub_message["changed"]
+                            )
+                        )
+                    else:
+                        messages.append(
+                            gettext("Changed {fields}.").format(
+                                **sub_message["changed"]
+                            )
+                        )
+
+                elif "deleted" in sub_message:
+                    sub_message["deleted"]["name"] = gettext(
+                        sub_message["deleted"]["name"]
+                    )
+                    messages.append(
+                        gettext("Deleted {name} “{object}”.").format(
+                            **sub_message["deleted"]
+                        )
+                    )
+
+            change_message = " ".join(msg[0].upper() + msg[1:] for msg in messages)
+            return change_message or gettext("No fields changed.")
+        else:
+            return self.change_message
+
+    def get_edited_object(self):
+        """Return the edited object represented by this log entry."""
+        return self.content_type.get_object_for_this_type(pk=self.object_id)
+
+    def get_admin_url(self):
+        """
+        Return the admin URL to edit the object represented by this log entry.
+        """
+        if self.content_type and self.object_id:
+            url_name = "admin:%s_%s_change" % (
+                self.content_type.app_label,
+                self.content_type.model,
+            )
+            try:
+                return reverse(url_name, args=(quote(self.object_id),))
+            except NoReverseMatch:
+                pass
+        return None
